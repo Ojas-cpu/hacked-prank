@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>System Alert</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #000;
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  #terminal {
+    width: 90%;
+    max-width: 800px;
+    padding: 20px;
+    border: 2px solid #0f0;
+    box-shadow: 0 0 20px #0f0;
+    background: rgba(0,0,0,0.9);
+  }
+  #output {
+    white-space: pre-wrap;
+    font-size: 16px;
+    line-height: 1.5;
+    min-height: 300px;
+  }
+  .cursor {
+    display: inline-block;
+    width: 10px;
+    background: #0f0;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  body.glitch {
+    animation: shake 0.15s infinite;
+  }
+  @keyframes shake {
+    0% { transform: translate(0,0); }
+    25% { transform: translate(2px,-2px); }
+    50% { transform: translate(-2px,2px); }
+    75% { transform: translate(2px,2px); }
+    100% { transform: translate(0,0); }
+  }
+  #final {
+    display: none;
+    text-align: center;
+  }
+  #final h1 {
+    font-size: 48px;
+    color: #f00;
+    text-shadow: 0 0 15px #f00;
+  }
+  #final p {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #0f0;
+  }
+  #closeBtn {
+    margin-top: 30px;
+    padding: 10px 20px;
+    background: #0f0;
+    color: #000;
+    border: none;
+    font-family: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+  }
+</style>
+</head>
+<body>
+
+<div id="terminal">
+  <div id="output"></div>
+</div>
+
+<div id="final">
+  <h1>💀 YOU'VE BEEN HACKED 💀</h1>
+  <p>Relax. You just got pranked. No data was harmed (or even touched).</p>
+  <button id="closeBtn" onclick="location.reload()">Run it again</button>
+</div>
+
+<script>
+const lines = [
+  "Booting intrusion module...",
+  "Connecting to target device... OK",
+  "Bypassing firewall............ OK",
+  "Extracting saved passwords.... [########--] 80%",
+  "Extracting saved passwords.... [##########] 100%",
+  "Accessing webcam............... OK",
+  "Accessing microphone........... OK",
+  "Uploading files to remote server...",
+  "  > photos/ ................. done",
+  "  > documents/ .............. done",
+  "  > browser_history.txt ..... done",
+  "Encrypting local drive.........",
+  "WARNING: SYSTEM COMPROMISED",
+];
+
+const output = document.getElementById('output');
+let lineIndex = 0;
+
+function typeLine(text, callback) {
+  let i = 0;
+  const span = document.createElement('div');
+  output.appendChild(span);
+  const interval = setInterval(() => {
+    span.textContent = text.slice(0, i) + '_';
+    i++;
+    if (i > text.length) {
+      clearInterval(interval);
+      span.textContent = text;
+      callback();
+    }
+  }, 18);
+}
+
+function nextLine() {
+  if (lineIndex < lines.length) {
+    typeLine(lines[lineIndex], () => {
+      lineIndex++;
+      setTimeout(nextLine, 200);
+    });
+  } else {
+    document.body.classList.add('glitch');
+    setTimeout(() => {
+      document.body.classList.remove('glitch');
+      document.getElementById('terminal').style.display = 'none';
+      document.getElementById('final').style.display = 'block';
+    }, 1200);
+  }
+}
+
+setTimeout(nextLine, 500);
+</script>
+
+</body>
+</html>
